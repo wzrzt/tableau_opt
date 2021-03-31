@@ -23,10 +23,10 @@ make tableau work better
 
 ### 借鉴  
 
-- pandas与tableau hyper的数据类型对应关系，及生成表结构，抄的https://github.com/innobi/pantab，感谢前车之鉴，节省了大量时间。  
+- pandas与tableau hyper的数据类型对应关系，及生成表结构，借用[innobi/pantab](https://github.com/innobi/pantab)中的代码，节省了大量时间。  
 - 从CSV到hyper的转化，来自[Tableau hyper-api-samples](https://github.com/tableau/hyper-api-samples)打包成函数以便复用方便。  
-- https://github.com/chinchon/python-tableau-tde 给了最初的启发，实现了第一次代码创建tableau数据源，但是迫于python能力弱，不会多线程写TDE文件，速度无法满足千万级的数据，浅尝辄止。  
-- https://github.com/jlmorton/tableau 是之前一直使用的版本，多线程创建TDE，帮助非常巨大，但是java自己不会改，在python中调用jar命令，python又是crontab控制的shell脚本中执行的，每天总有一些jar进程，python写TDE的进程占着内存不退出，不清楚为什么。速度依然是不够快，既然使用python了，大量数据都在内存中，5G的数据加上计算过程中的数据等，python脚本能占10G，20G很正常，TDE文件创建过程中大量的时间内存都被占着，导致服务器资源紧张。这也是寻找新方法的动力。  
+- [chinchon/python-tableau-tde](https://github.com/chinchon/python-tableau-tde)给了最初的启发，使用它进行了第一次代码创建tableau数据源的尝试，但是迫于自己python水平弱，不会多线程写TDE文件，速度无法满足千万级的数据，没有继续。  
+- [jlmorton/tableau](https://github.com/jlmorton/tableau)是之前一直使用的版本，多线程创建TDE，帮助非常巨大，但是java自己不会改，在python中调用jar命令，python又是crontab控制的shell脚本中执行的，每天总有一些jar进程，python写TDE的进程占着内存不退出，不清楚为什么。速度依然是不够快，既然使用python了，大量数据都在内存中，5G的数据加上计算过程中的数据等，python脚本能占10G，20G很正常，TDE文件创建过程中大量的时间内存都被占着，导致服务器资源紧张。这也是寻找新方法的动力。  
 
 ### 使用环境  
 
