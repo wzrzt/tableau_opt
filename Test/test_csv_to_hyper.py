@@ -21,7 +21,7 @@ if __name__=="__main__":
     hyper_path = 'test_data/test.hyper'
     csv_path = 'test_data/test_for_hyper.csv'
     
-    sample_df_nrows = 1000
+    sample_df_nrows = 1000000
     df = pd.DataFrame(
         dict(
             id=range(sample_df_nrows), 

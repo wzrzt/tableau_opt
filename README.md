@@ -37,6 +37,30 @@ SSD: Intel S4510
 当然这个提升是COPY命令带来的，如果用hyper api中的insert方法，只能按行循环插入数据，1秒仅能8000行，而且是用panda.DataFrame.iterrows()，是比之前的tde快得多的，但是600万行也要12分钟以上。于是权衡之下，还是麻烦一步写出csv吧。至于数据增量，删减，全用其他方式完成，最后都是一个csv几十秒转hyper，毕竟其他的数据处理日常也是免不了的。    
 
 
+### 测试脚本
 
+可使用`Test/test_csv_to_hyper.py`进行测试使用，行数`sample_df_nrows`，列数为原有的3列再加上重复生成`sample_df_ncols`列。 
+   
+在个人电脑上100万行，30列csv转化耗时8秒多  
+  
+电脑硬件如下:  
+```
+MacBook Pro (Retina, 13-inch, Early 2015)  
+Processor 2.7 GHz Dual-Core Intel Core i5  
+Memory 8 GB 1867 MHz DDR3  
+```
+  
 
-
+测试结果:  
+```
+Create df 2021-03-31 14:08:57.060926
+(1000000, 30)
+Write csv start 2021-03-31 14:08:59.215759
+100% |██████████████████████████████████████████████████| Writing CSV [done]
+Build hyper file start 2021-03-31 14:09:01.871565
+The number of rows in table "RandomValues" is 1000000.
+Ends: 2021-03-31 14:09:10.330701
+create df costs: 0:00:02.154833
+Write csv cost: 0:00:02.655806
+hyper file Costs: 0:00:08.459136
+```

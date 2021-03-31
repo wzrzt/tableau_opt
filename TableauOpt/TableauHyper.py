@@ -125,7 +125,7 @@ def csv2hyper(table_definition, path_to_csv, path_to_hyper):
     An example demonstrating loading data from a csv into a new Hyper file
     For more details, see https://help.tableau.com/current/api/hyper_api/en-us/docs/hyper_api_insert_csv.html
     """
-    print("EXAMPLE - Load data from CSV into table in new Hyper file")
+    # print("EXAMPLE - Load data from CSV into table in new Hyper file")
 
     # path_to_database = Path("customer.hyper")
     path_to_database = Path(path_to_hyper)
@@ -175,16 +175,16 @@ def csv2hyper(table_definition, path_to_csv, path_to_hyper):
             #
             # The parameters of the COPY command are documented in the Tableau Hyper SQL documentation
             # (https:#help.tableau.com/current/api/hyper_api/en-us/reference/sql/sql-copy.html).
-            print("Issuing the SQL COPY command to load the csv file into the table. Since the first line")
-            print("of our csv file contains the column names, we use the `header` option to skip it.")
+            # print("Issuing the SQL COPY command to load the csv file into the table. Since the first line")
+            # print("of our csv file contains the column names, we use the `header` option to skip it.")
             count_in_customer_table = connection.execute_command(
                 command=f"COPY {table_definition.table_name} from {escape_string_literal(path_to_csv)} with "
                 f"(format csv, NULL '', delimiter ',', header)")
 
             print(f"The number of rows in table {table_definition.table_name} is {count_in_customer_table}.")
 
-        print("The connection to the Hyper file has been closed.")
-    print("The Hyper process has been shut down.")
+    #     print("The connection to the Hyper file has been closed.")
+    # print("The Hyper process has been shut down.")
 
 
 def publishDataSource(host, username, password, projectName, datasourceFilePath, datasourceName=None):
