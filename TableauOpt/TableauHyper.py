@@ -1,10 +1,9 @@
 # -----------------------------------------------------------------------------
-#
-# 使用Tableau Hyper API 创建数据源
-# 20210327经过测试发现，直接使用 hyper-sql的COPY命令，600万行30列CSV，转hyper只需要17秒
-# 这里将其打包成函数以便于使用
-# 优点，速度非常快，缺点，COPY命令遇错即停，仅告知行号，错误需要自己定位
-# 因此有可能需要异常处理方案，例如出错的列用string
+# Create Tableau datasource via Tableau Hyper API
+# 20210327 Use COPY Command of hyper-sql, we can build hyper file in just 17 seconds from large csv that has 6M rows and 30 columns. 
+# Advantages:     Very Fast; No need for multithreading programing. 
+# Disadvantages:  Data must be save to csv at first which costs time; COPY command fails at first error occurs, when occurs data must be checked and fixed and do it again.
+# In my experience, using datatable to accelerate csv writing will csv-writing benifit much more than cost. 
 # -----------------------------------------------------------------------------
 from pathlib import Path
 
@@ -27,7 +26,7 @@ from distutils.version import LooseVersion
 # for data source publish
 import tableauserverclient as TSC
 
-# 检查 pandas 是否 1.0版本及以上，对应的列类型关系不同
+# Check pandas version. dtypes map is different
 PANDAS_100 = LooseVersion(pd.__version__) >= LooseVersion("1.0.0")
 
 # The Hyper API as of writing doesn't offer great hashability for column comparison
@@ -94,12 +93,6 @@ def _pandas_to_tableau_type(typ: str) -> _ColumnType:
     except KeyError:
         raise TypeError("Conversion of '{}' dtypes not supported!".format(typ))
 
-"""
-Dask相当不好用，各种手动指定列的类型，类型不统一报错。写出csv比pandas还要慢
-Dask似乎只是给pandas加上Lazyeval，并没有提速效果
-如果用 Modin 是否可以提速，需要验证
-也许可以试试data.table在python中对应的库
-"""
 
 def buildTabDefination(df, hyper_table_name='Extract'):
     """
@@ -196,8 +189,9 @@ def csv2hyper(table_definition, path_to_csv, path_to_hyper):
 
 def publishDataSource(host, username, password, projectName, datasourceFilePath, datasourceName=None):
     """
-    Shows how to leverage the Tableau Server Client (TSC) to sign in and publish an extract directly to Tableau Online/Server
-    datasourceName中，不加.hyper后缀 加了之后会导致发布的文件重复的 .hyper后缀
+    projectName is name, and project id will be find automatically.
+    datasourceName: should not have '.hyper' as sufix, which will make duplicate '.hyper.hyper' in tableau data source file name on tableau server.
+                    if None, name will be hyper file name.
     """
 
     server_address = host
@@ -224,8 +218,6 @@ def publishDataSource(host, username, password, projectName, datasourceFilePath,
         # Publish datasource
         datasource = server.datasources.publish(datasource, datasourceFilePath, publish_mode)
         print("Datasource published. Datasource ID: {0}".format(datasource.id))
-
-
 
 
 if __name__ == '__main__':
